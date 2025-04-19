@@ -1,11 +1,17 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import React from 'react'
 import io, { Socket } from 'socket.io-client'
-function App: React.FC=() =>{
+const App: React.FC=() =>{
 const [state, setstate] = useState(0)
 const socket:Socket<ServerToTlientEvents, clientToServerEvents>=io({axios: {origin: "http://localhost:9999 ""}, withCredientials: true })
+
+  useEffect((value: number) => {
+    socket.on(number)
+    setstate(state)
+  })
+  
   interface increaMent{
     increase():()=>number
   }
