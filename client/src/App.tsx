@@ -1,36 +1,42 @@
-import axios from 'axios'
 import { useState, useEffect } from 'react'
 
 import React from 'react'
 import io, { Socket } from 'socket.io-client'
-const App: React.FC=() =>{
-const [state, setstate] = useState(0)
-const socket:Socket<ServerToTlientEvents, clientToServerEvents>=io({axios: {origin: "http://localhost:9999 ""}, withCredientials: true })
+const App: React.FC =() =>{
+const [state, setState] = useState<number>(0)
+interface ServerToTlientEvents{
+  update: (value: number)=>void
+}
+interface clientToServerEvents {
+  increament():()=>void;
+  decreament():()=>void;
+}
 
-  useEffect((value: number) => {
-    socket.on(number)
-    setstate(state)
-  })
+const socket:Socket<ServerToTlientEvents, clientToServerEvents>=io( "http://localhost:9999 ",{ withCredentials: true })
+
+  useEffect(() => {
+    socket.on('update', (newValue: number)=>{
+        setState(newValue)
+    })
+    return (()=>{
+      socket.off("update")
+    })
+  },[])
   
-  interface increaMent{
-    increase():()=>number
+  const increase=()=>{
+    setState(prev =>prev+1)
+    socket.emit('increament')
   }
-  interface decreaMeent{
-    decrease():()=>number
+  const decrease=()=>{
+    setState(prev=>prev-1)
+    socket.emit("decreament")
   }
-
-  function increase(setincrease: increaMent){
-    setstate+=1;
-  }
-  function decrease(setdecrease: decreaMent){
-    setstate-=1;
-  }
-
+ 
   return (
     <>
-  <div>{value}</div>
-  <div onClick={decrease}>+</div>
-  <div onClick={increase}>-</div>
+  <div>The current value: {state}</div>
+  <button onClick={increase}>+</button>
+  <button onClick={decrease}>-</button>
     </>
   )
 }

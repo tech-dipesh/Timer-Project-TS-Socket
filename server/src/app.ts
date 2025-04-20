@@ -1,4 +1,4 @@
-import {express} from "express"
+import express from "express"
 import {Server} from "socket.io"
 import cors from "cors"
 import { createServer } from "http"
@@ -22,7 +22,8 @@ io.on("connection", (socket)=>{
   socket.on('chat', (message: string)=>{
     console.log("Recieve message is:", message);
     // io.on("ressponse", message) //this is not corerct i am trying to understand why is the error.
-    emit.on("ressponse", message)
+    // emit.on("response", message)
+    socket.emit("response", "Message recieved fro ${message}")
   })
   socket.on("client", (clientMessage: clientType)=>{
     console.log("Client message that he is sending is:", clientMessage);
